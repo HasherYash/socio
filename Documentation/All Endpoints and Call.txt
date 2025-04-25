@@ -1,0 +1,928 @@
+# All Endpoints and Call
+
+———————————————————————————
+
+* Auth Controller
+
+1. Register a new user
+
+Method: POST
+URL: http://localhost:8080/api/auth/register
+Headers: Content-Type: application/json
+
+{
+  "email": "john@socio.com",
+  "password": "secure123",
+  "role": "ADMIN"
+}
+
+Expected Response : User registered successfully!
+
+———————————————————————————
+
+2. Login with credentials
+
+Method: POST
+URL: http://localhost:8080/api/auth/login
+Headers: Content-Type: application/json
+
+{
+  "email": "john@socio.com",
+  "password": "secure123"
+}
+
+Expected Response :
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huQHNvY2lvLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc0NTU0NTU0MywiZXhwIjoxNzQ1NjMxOTQzfQ.GVuA6DWqdAxNMi0ISQTbZvkwhwA6b4oawDTKkO1Sc6g",
+    "role": "ADMIN"
+}
+
+———————————————————————————
+
+3. Reset Password
+
+Method: POST
+URL: http://localhost:8080/api/auth/reset-password
+Headers: Content-Type: application/json
+
+
+{
+  "email": "john@example.com",
+  "oldPassword": "secure123",
+  "newPassword": "newpass456"
+}
+
+Expected Response : Password reset successful.
+
+———————————————————————————
+———————————————————————————
+
+* UserController
+
+1. Create User (ADMIN only)
+
+Method: POST
+URL: http://localhost:8080/api/users
+Headers: Content-Type: application/json  
+Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+
+{
+  "email": "newuser@example.com",
+  "name": "New User",
+  "password": "pass123"
+}
+
+Expected Response:
+ 
+[
+    {
+        "id": 1,
+        "email": "john@example.com",
+        "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+        "role": "USER",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:16:16.684307",
+        "groups": [],
+        "username": null,
+        "createdAt": "2025-04-24T18:38:48.000+00:00",
+        "privateProfile": false
+    },
+    {
+        "id": 2,
+        "email": "john@socio.com",
+        "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+        "role": "ADMIN",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:15:03.06616",
+        "groups": [],
+        "username": null,
+        "createdAt": "2025-04-25T01:45:03.000+00:00",
+        "privateProfile": false
+    }
+]
+
+———————————————————————————
+
+2. Get User by ID (USER or ADMIN)
+
+Method: GET
+URL: http://localhost:8080/api/users/1
+Headers: Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+{
+    "id": 1,
+    "email": "john@example.com",
+    "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+    "role": "USER",
+    "dateOfBirth": null,
+    "passwordChangedAt": "2025-04-25T07:16:16.684307",
+    "groups": [],
+    "username": null,
+    "createdAt": "2025-04-24T18:38:48.000+00:00",
+    "privateProfile": false
+}
+
+———————————————————————————
+
+3. Get All Users (ADMIN only)
+
+Method: GET
+URL: http://localhost:8080/api/users
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+[
+    {
+        "id": 1,
+        "email": "john@example.com",
+        "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+        "role": "USER",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:16:16.684307",
+        "groups": [],
+        "username": null,
+        "createdAt": "2025-04-24T18:38:48.000+00:00",
+        "privateProfile": false
+    },
+    {
+        "id": 2,
+        "email": "john@socio.com",
+        "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+        "role": "ADMIN",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:15:03.06616",
+        "groups": [],
+        "username": null,
+        "createdAt": "2025-04-25T01:45:03.000+00:00",
+        "privateProfile": false
+    }
+]
+
+———————————————————————————
+
+4. Update User (USER or ADMIN)
+
+Method: PUT
+URL: http://localhost:8080/api/users/2
+Headers: Content-Type: application/json  
+Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+{
+  "name": "Updated Name",
+  "email": "updatedemail@example.com",
+  "password": "newpass123"
+}
+
+Expected Response:
+
+{
+    "id": 2,
+    "email": "john@socio.com",
+    "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+    "role": "ADMIN",
+    "dateOfBirth": null,
+    "passwordChangedAt": "2025-04-25T07:15:03.06616",
+    "groups": [],
+    "username": null,
+    "createdAt": "2025-04-25T01:45:03.000+00:00",
+    "privateProfile": false
+}
+
+———————————————————————————
+
+5. Delete User (ADMIN only)
+
+Method: DELETE
+URL: http://localhost:8080/api/users/1
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+{
+    "id": 1,
+    "email": "john@example.com",
+    "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+    "role": "USER",
+    "dateOfBirth": null,
+    "passwordChangedAt": "2025-04-25T07:16:16.684307",
+    "groups": [],
+    "username": null,
+    "createdAt": "2025-04-24T18:38:48.000+00:00",
+    "privateProfile": false
+}
+
+———————————————————————————
+———————————————————————————
+
+* PostController
+
+1. Create Post
+
+Method: POST
+URL: http://localhost:8080/api/posts
+Headers: Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
+  "content": "This is a sample post!",
+  "userEmail": "john@socio.com",
+  "fileType": "TEXT"
+}
+
+Expected Response :
+
+{
+    "id": 1,
+    "content": "This is a sample post!",
+    "createdAt": "2025-04-25T07:38:08.992175",
+    "fileType": null,
+    "moderationStatus": null,
+    "user": {
+        "id": 2,
+        "email": "john@socio.com",
+        "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+        "role": "ADMIN",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:15:03.06616",
+        "groups": [],
+        "username": null,
+        "createdAt": "2025-04-25T01:45:03.000+00:00",
+        "privateProfile": false
+    },
+    "group": null,
+    "comments": null,
+    "likes": null,
+    "reportedPosts": null,
+    "reported": false,
+    "reportedBy": null
+}
+
+———————————————————————————
+
+2. Get All Posts
+
+Endpoint: http://localhost:8080/api/posts
+Headers: 
+Expected Response: 
+
+[
+    {
+        "id": 1,
+        "content": "This is a sample post!",
+        "createdAt": "2025-04-25T07:38:08.992175",
+        "fileType": null,
+        "moderationStatus": null,
+        "user": {
+            "id": 2,
+            "email": "john@socio.com",
+            "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+            "role": "ADMIN",
+            "dateOfBirth": null,
+            "passwordChangedAt": "2025-04-25T07:15:03.06616",
+            "groups": [],
+            "username": null,
+            "createdAt": "2025-04-25T01:45:03.000+00:00",
+            "privateProfile": false
+        },
+        "group": null,
+        "comments": [],
+        "likes": [],
+        "reportedPosts": [],
+        "reported": false,
+        "reportedBy": null
+    }
+]
+
+———————————————————————————
+
+3. Get Posts by User Email
+
+Method: GET
+URL: http://localhost:8080/api/posts/user?email=user@example.com
+
+Headers:Authorization: Bearer <USER_JWT_TOKEN>
+Expected Response : 
+
+———————————————————————————
+
+4. Delete Post
+
+Method: DELETE
+URL: http://localhost:8080/api/posts/1
+Headers: Authorization: Bearer <USER_JWT_TOKEN>
+
+Expected Response: 200 OK 
+
+———————————————————————————
+
+5. Share a Post
+
+Method: POST
+URL: http://localhost:8080/api/posts/share/1
+Headers:
+Content-Type: application/json  
+Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Body:
+
+Expected Response:
+{
+    "content": "Shared from @john@socio.com:\nThis is a sample post!",
+    "groupId": null
+}
+
+———————————————————————————
+
+6. Report a Post
+
+Method: POST
+URL: http://localhost:8080/api/posts/posts/1/report
+Headers: Content-Type: application/json  
+Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Body: 
+
+{
+  "reason": "Inappropriate content"
+}
+
+Expected Response: Post reported successfully.
+
+———————————————————————————
+
+7. Create Group Post
+
+Method: POST
+URL: http://localhost:8080/api/posts/group
+Headers:
+Content-Type: application/json  
+Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+
+Body:
+{
+  "content": "Group specific post",
+  "fileType": "TEXT",
+  "groupId": 1
+}
+
+Expected Response: Group post created and returned.
+
+———————————————————————————
+———————————————————————————
+
+* GroupController
+
+1. Create Group
+Method: POST
+URL: http://localhost:8080/api/groups
+Headers:
+	•	Content-Type: application/json
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+{
+  "name": "Java Enthusiasts",
+  "description": "A group for Java lovers"
+}
+
+Expected Response: 
+{
+    "id": 2,
+    "name": "Java Enthusiasts",
+    "description": "A group for Java lovers",
+    "users": null,
+    "members": null,
+    "createdBy": null
+}
+
+———————————————————————————
+
+2. Join Group
+
+Method: POST
+URL: http://localhost:8080/api/groups/2/join?email=user@example.com
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Body:
+No body required, just pass the email in the query parameter (email=user@example.com).
+
+Expected Response :
+
+{
+  "id": 2,
+  "name": "Java Enthusiasts",
+  "description": "A group for Java lovers",
+  "members": [
+    {
+      "id": 101,
+      "email": "user@example.com",
+      "name": "User One"
+    }
+  ]
+}
+
+———————————————————————————
+
+3. Leave Group
+
+Method: POST
+URL: http://localhost:8080/api/groups/2/leave?email=john@example.com
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Body:
+
+Expected Response: 
+
+{
+    "id": 2,
+    "name": "Java Enthusiasts",
+    "description": "A group for Java lovers",
+    "users": [
+        {
+            "id": 2,
+            "email": "john@socio.com",
+            "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+            "role": "ADMIN",
+            "dateOfBirth": null,
+            "passwordChangedAt": "2025-04-25T07:15:03.06616",
+            "username": null,
+            "createdAt": "2025-04-25T01:45:03.000+00:00",
+            "privateProfile": false
+        }
+    ],
+    "members": [],
+    "createdBy": null
+}
+
+———————————————————————————
+
+4. Get Group Details
+
+Method: GET
+URL: http://localhost:8080/api/groups/2
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+{
+    "id": 2,
+    "name": "Java Enthusiasts",
+    "description": "A group for Java lovers",
+    "users": [
+        {
+            "id": 2,
+            "email": "john@socio.com",
+            "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+            "role": "ADMIN",
+            "dateOfBirth": null,
+            "passwordChangedAt": "2025-04-25T07:15:03.06616",
+            "username": null,
+            "createdAt": "2025-04-25T01:45:03.000+00:00",
+            "privateProfile": false
+        }
+    ],
+    "members": [],
+    "createdBy": null
+}
+
+———————————————————————————
+
+5. Get Group Members
+
+Method: GET
+URL: http://localhost:8080/api/groups/2/members
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+[
+    {
+        "id": 2,
+        "email": "john@socio.com",
+        "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+        "role": "ADMIN",
+        "dateOfBirth": null,
+        "passwordChangedAt": "2025-04-25T07:15:03.06616",
+        "username": null,
+        "createdAt": "2025-04-25T01:45:03.000+00:00",
+        "privateProfile": false
+    }
+]
+
+———————————————————————————
+
+6. Add Member to Group
+
+Method: POST
+URL: http://localhost:8080/api/groups/{groupId}/add-member
+Headers:
+	•	Content-Type: application/json
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Body:
+{
+  "username": "user2@example.com"
+}
+
+Expected Response: "User added to group."
+
+———————————————————————————
+
+7. Remove Member from Group
+
+Method: DELETE
+URL: http://localhost:8080/api/groups/{groupId}/remove-member
+Headers:
+	•	Content-Type: application/json
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+{
+  "username": "user2@example.com"
+}
+
+Expected Response: "User removed from group."
+
+———————————————————————————
+
+8. Search Groups
+
+Method: GET
+URL: http://localhost:8080/api/groups/search?searchTerm=java
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response :
+ [
+    {
+        "id": 1,
+        "name": "Java track",
+        "description": "A group forJava track",
+        "users": [],
+        "members": [
+            {
+                "id": 1,
+                "email": "john@example.com",
+                "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+                "role": "USER",
+                "dateOfBirth": null,
+                "passwordChangedAt": "2025-04-25T07:16:16.684307",
+                "username": null,
+                "createdAt": "2025-04-24T18:38:48.000+00:00",
+                "privateProfile": false
+            }
+        ],
+        "createdBy": null
+    },
+    {
+        "id": 2,
+        "name": "Java Enthusiasts",
+        "description": "A group for Java lovers",
+        "users": [
+            {
+                "id": 1,
+                "email": "john@example.com",
+                "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+                "role": "USER",
+                "dateOfBirth": null,
+                "passwordChangedAt": "2025-04-25T07:16:16.684307",
+                "username": null,
+                "createdAt": "2025-04-24T18:38:48.000+00:00",
+                "privateProfile": false
+            },
+            {
+                "id": 2,
+                "email": "john@socio.com",
+                "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+                "role": "ADMIN",
+                "dateOfBirth": null,
+                "passwordChangedAt": "2025-04-25T07:15:03.06616",
+                "username": null,
+                "createdAt": "2025-04-25T01:45:03.000+00:00",
+                "privateProfile": false
+            }
+        ],
+        "members": [],
+        "createdBy": null
+    }
+]
+
+———————————————————————————
+
+9. Get Groups for a User
+
+Method: GET
+URL: http://localhost:8080/api/groups/user/{userId}
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response : 
+
+[
+    {
+        "id": 2,
+        "name": "Java Enthusiasts",
+        "description": "A group for Java lovers",
+        "users": [
+            {
+                "id": 1,
+                "email": "john@example.com",
+                "password": "$2a$10$F3zhjP.3y9ZE2dP7Ppqjp.aVQA0.gEhhOZf7AdrDWm5zhZgqJQfje",
+                "role": "USER",
+                "dateOfBirth": null,
+                "passwordChangedAt": "2025-04-25T07:16:16.684307",
+                "username": null,
+                "createdAt": "2025-04-24T18:38:48.000+00:00",
+                "privateProfile": false
+            },
+            {
+                "id": 2,
+                "email": "john@socio.com",
+                "password": "$2a$10$xsmGncImqK1PpGmhD4zrb.Xp.oohzwpqikXqPvqGx1DTFyhORB/jO",
+                "role": "ADMIN",
+                "dateOfBirth": null,
+                "passwordChangedAt": "2025-04-25T07:15:03.06616",
+                "username": null,
+                "createdAt": "2025-04-25T01:45:03.000+00:00",
+                "privateProfile": false
+            }
+        ],
+        "members": [],
+        "createdBy": null
+    }
+]
+
+———————————————————————————
+———————————————————————————
+
+* Like Controller
+
+Method: POST
+URL: http://localhost:8080/api/likes/{postId}
+Headers:
+	•	Content-Type: application/json
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response : Post liked
+
+———————————————————————————
+———————————————————————————
+
+* Comment Controller
+
+1. Add Comment
+Method: POST
+URL: /api/comments/{postId}
+
+Request Body:
+{
+  "content": "This is a comment."
+}
+
+Expected Response : 
+{
+    "id": 1,
+    "content": "This is a comment.",
+    "author": "john@socio.com",
+    "createdAt": "2025-04-25T08:35:04.792728"
+}
+
+———————————————————————————
+
+2. Get Comments by Post
+
+Method: GET
+URL: http://localhost:8080/api/comments/{postId}
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response:
+
+[
+    {
+        "id": 1,
+        "content": "This is a comment.",
+        "author": "john@socio.com",
+        "createdAt": "2025-04-25T08:35:04.792728"
+    }
+]
+
+———————————————————————————
+
+3. Delete Comment
+
+Method: DELETE
+URL: http://localhost:8080/api/comments/{commentId}
+Headers:
+	•	Authorization: Bearer <USER_OR_ADMIN_JWT_TOKEN>
+
+Expected Response : Comment deleted successfully
+
+———————————————————————————
+———————————————————————————
+
+* Follow Controller
+
+1. Follow User
+Method: POST
+URL: http://localhost:8080/api/follow/{username}
+Headers:
+	•	Content-Type: application/json
+	•	Authorization: Bearer <USER_JWT_TOKEN>
+
+Expected Response: Followed user: john@example.com
+
+———————————————————————————
+
+2. Unfollow User
+
+Method: DELETE
+URL: http://localhost:8080/api/follow/{username}
+Headers:
+	•	Authorization: Bearer <USER_JWT_TOKEN>
+
+Expected Response: Unfollowed user: john@example.com
+
+———————————————————————————
+
+3. Get Followers
+
+Method: GET
+URL: http://localhost:8080/api/follow/followers/{username}
+Headers:
+	•	Authorization: Bearer <USER_JWT_TOKEN>
+
+Expected Response: []
+
+———————————————————————————
+
+4. Get Following
+
+Method: GET
+URL: http://localhost:8080/api/follow/following/{username}
+Headers:
+	•	Authorization: Bearer <USER_JWT_TOKEN>
+
+Expected Response: []
+
+———————————————————————————
+———————————————————————————
+
+* Admin Controller
+
+1. Create or Update Admin User
+
+Method: POST
+URL: http://localhost:8080/api/admin/user
+Headers:
+
+Content-Type: application/json  
+Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Body:
+
+{
+  "email": "newadmin@socio.com",
+  "password": "securePassword",
+  "role": "ADMIN",
+  "username": "newadmin",
+  "isPrivateProfile": false
+}
+
+Expected Response: 
+{
+    "id": 3,
+    "email": "admin@socio.com",
+    "password": "$2a$10$ggk2pQmdZrDsyLidlsnEKePgnLK658kIzLQObg3S15hZ28HU72Dey",
+    "role": "ADMIN",
+    "dateOfBirth": null,
+    "passwordChangedAt": null,
+    "username": "superadmin",
+    "createdAt": "2025-04-25T03:27:07.579+00:00",
+    "privateProfile": false
+}
+
+————————————————————————————————
+
+2. Get User Stats (Followers Count)
+
+Method: GET
+URL: http://localhost:8080/api/admin/user-stats
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Expected Response: 
+
+[
+    {
+        "username": "admin@socio.com",
+        "followerCount": 0,
+        "createdAt": "2025-04-25T03:27:08.000+00:00"
+    },
+    {
+        "username": "john@socio.com",
+        "followerCount": 0,
+        "createdAt": "2025-04-25T01:45:03.000+00:00"
+    },
+    {
+        "username": "john@example.com",
+        "followerCount": 0,
+        "createdAt": "2025-04-24T18:38:48.000+00:00"
+    }
+]
+
+————————————————————————————————
+
+3. Get Post Analytics
+
+Method: GET
+URL: http://localhost:8080/api/admin/analytics/posts
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Expected Response: 
+[
+    {
+        "postId": 1,
+        "createdBy": "john@socio.com",
+        "createdAt": "2025-04-25",
+        "fileType": null,
+        "inGroup": false,
+        "likeCount": 0,
+        "commentCount": 0
+    },
+    {
+        "postId": 2,
+        "createdBy": "john@socio.com",
+        "createdAt": "2025-04-25",
+        "fileType": null,
+        "inGroup": false,
+        "likeCount": 0,
+        "commentCount": 0
+    }
+]
+
+————————————————————————————————
+
+4. Get Grouped Reported Posts
+
+Method: GET
+URL: http://localhost:8080/api/admin/reports/grouped
+Headers:
+
+
+Expected Response:  []
+
+————————————————————————————————
+
+5. Get Groups Sorted by Member Count or Popularity
+
+Method: GET
+URL: http://localhost:8080/api/admin/groups/sorted
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+
+Expected Response:  
+[
+  {
+    "id": 2,
+    "name": "Java Enthusiasts",
+    "description": "A group for Java lovers"
+  },
+  {
+    "id": 3,
+    "name": "Spring Boot Devs",
+    "description": "Group for Spring Boot developers"
+  }
+]
+
+————————————————————————————————
+
+6. Moderate Reported Post
+
+Method: POST
+URL: http://localhost:8080/api/admin/moderate/{postId}?action=APPROVED
+Headers: Authorization: Bearer <ADMIN_JWT_TOKEN>
+Expected Response:  
+{
+  "message": "Post moderation status updated to APPROVED"
+}
+
+————————————————————————————————
+
+7. Bulk Upload Users via Excel/CSV
+
+Method: POST
+URL: http://localhost:8080/api/admin/users/upload
+Headers:
+Authorization: Bearer <ADMIN_JWT_TOKEN>
+Content-Type: multipart/form-data
+
+Expected Response:  Users uploaded successfully.
+
+————————————————————————————————
+————————————————————————————————

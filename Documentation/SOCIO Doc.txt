@@ -1,0 +1,241 @@
+# soCiO - Social Network API
+
+soCiO is a full-featured social networking application built with Spring Boot, designed for modern user interaction, group management, content moderation, and analytics. This RESTful API supports role-based access with JWT authentication, scalable user-post-group relationships, and admin-level controls.
+
+---
+
+## 🧠 Features
+
+### 👤 User Functionality
+- Register/Login with JWT
+- Follow/Unfollow users
+- Like, Comment, Share, Report posts
+- Password reset and change tracking
+- Private/Public profiles
+
+### 📝 Post Management
+- Create, Update, Delete posts
+- Attach file types (image, video, document)
+- Post sharing & reporting
+- View post analytics
+
+### 👥 Groups
+- Create and manage groups
+- Add/Remove users from groups
+- Group-specific posts
+- Search groups by parameters
+
+### 🛡️ Admin Features
+- View all users sorted by follower count grouped by registration date
+- Group analytics (sort by member or post count)
+- View and moderate reported posts (grouped by file type/date/user)
+- Bulk user upload via CSV/XLSX
+
+---
+
+## 🏗️ Tech Stack
+
+- Java 17
+- Spring Boot 3
+- Spring Security + JWT
+- JPA/Hibernate
+- MySQL
+- Apache POI for Excel file handling
+- Lombok
+
+---
+
+## 📁 Project Structure
+
+com.socio.socio
+├── config/              # JWT & Security configuration
+├── controller/          # All REST controllers
+├── dto/                 # Request/Response DTOs
+├── entity/              # Entity classes (User, Post, Group, etc.)
+├── repository/          # Spring Data JPA Repositories
+├── service/             # Business logic
+├── util/                # Utilities (e.g., file handling)
+└── SoCiOApplication.java
+
+---
+
+## 🔐 Authentication
+
+- Authentication is done via JWT.
+- Access token is issued upon login and required in the `Authorization` header (`Bearer <token>`).
+
+---
+
+## 📄 API Endpoints (Highlights)
+
+##Auth
+	•	POST /api/auth/register : Register a new user
+	•	POST /api/auth/login : Login and receive JWT token
+
+
+##Users
+	•	GET /api/users/{username} : Get user profile by username
+	•	PUT /api/users/update-password : Update current user’s password
+	•	POST /api/follow/{username} : Follow or unfollow a user
+	•	GET /api/follow/followers/{username} : Get list of followers for a user
+	•	GET /api/follow/following/{username} : Get list of users followed by a user
+
+##Posts
+	•	POST /api/posts : Create a new post
+	•	GET /api/posts/{postId} : Get a post by ID
+	•	PUT /api/posts/{postId} : Update a post
+	•	DELETE /api/posts/{postId} : Delete a post
+	•	POST /api/posts/share/{postId} : Share an existing post
+	•	POST /api/posts/report/{postId} : Report a post
+	•	GET /api/posts/user/{username} : Get all posts by a user
+
+##Comments
+	•	POST /api/comments/{postId} : Add comment to a post
+	•	GET /api/comments/{postId} : Get all comments for a post
+
+##Likes
+	•	POST /api/likes/{postId} : Like a post
+	•	DELETE /api/likes/{postId} : Unlike a post
+	•	GET /api/likes/{postId} : Get users who liked a post
+
+##Groups
+	•	POST /api/groups : Create a group
+	•	PUT /api/groups/{groupId}/add-user : Add user to group
+	•	PUT /api/groups/{groupId}/remove-user : Remove user from group
+	•	GET /api/groups/{groupId}/posts : Get all posts in a group
+	•	POST /api/groups/{groupId}/posts : Create post in a group
+	•	GET /api/groups/user/{username} : Get all groups a user is part of
+	•	GET /api/groups/search?name=&minUsers=&maxUsers= : Search groups by filters
+	•	GET /api/groups/sorted?sortBy=userCount|postCount : Get sorted groups    
+
+##Admin
+	•	GET /api/admin/user-stats : Get user analytics by registration date
+	•	GET /api/admin/analytics/posts : Get post analytics
+	•	GET /api/admin/reports/grouped : Get reported posts grouped by date/user/filetype
+	•	POST /api/admin/reports/action/{postId} : Take action on reported post (block/delete)
+	•	POST /api/admin/users/upload : Bulk upload users via CSV/XLSX    
+
+---
+
+## 📦 Sample CSV Format for Bulk Upload
+
+```csv
+id,email,password
+1,user1@example.com,password123
+2,user2@example.com,password456
+
+Supported formats: .csv, .xlsx
+
+Running Tests
+./mvnw test
+
+
+Getting Started
+
+Prerequisites
+	•	Java 17+
+	•	Maven
+	•	MySQL running on localhost:3306
+
+Steps
+
+git clone https://github.com/HasheYash/socio.git
+cd socio-backend
+cp .env.example .env
+# Fill DB credentials and JWT secret
+./mvnw spring-boot:run
+
+App runs on: http://localhost:8080
+
+ Admin Role
+
+To create an admin:
+
+POST /api/admin/user
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "ADMIN",
+  "username": "admin"
+}
+
+DataBase Schema Diagram
+
+TABLE: users
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+email                VARCHAR(255)    UNIQUE, NOT NULL
+password             VARCHAR(255)    NOT NULL
+username             VARCHAR(255)    UNIQUE, NOT NULL
+role                 VARCHAR(255)    NOT NULL  -- USER / ADMIN
+date_of_birth        DATE
+is_private_profile   BIT(1)          DEFAULT 0
+password_changed_at  DATETIME(6)
+created_at           DATETIME
+
+TABLE: post
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+content              VARCHAR(255)    NOT NULL
+created_at           DATETIME(6)
+file_type            VARCHAR(255)
+moderation_status    VARCHAR(255)    DEFAULT 'PENDING'
+reported             BIT(1)          DEFAULT 0
+reported_by_id       BIGINT          FK → users(id)
+user_id              BIGINT          FK → users(id)
+group_id             BIGINT          FK → groups(id)
+
+TABLE: comments
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+content              VARCHAR(1000)   NOT NULL
+created_at           DATETIME(6)
+updated_at           DATETIME(6)
+post_id              BIGINT          FK → post(id)
+user_id              BIGINT          FK → users(id)
+
+TABLE: likes
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+liked_at             DATETIME(6)
+post_id              BIGINT          FK → post(id)
+user_id              BIGINT          FK → users(id)
+
+TABLE: groups
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+name                 VARCHAR(255)    NOT NULL, UNIQUE
+description          VARCHAR(255)
+created_by           BIGINT          FK → users(id)
+
+TABLE: group_members
+------------------------------------------------
+group_id             BIGINT          FK → groups(id)
+user_id              BIGINT          FK → users(id)
+PRIMARY KEY (group_id, user_id)
+
+TABLE: user_groups
+------------------------------------------------
+group_id             BIGINT          FK → groups(id)
+user_id              BIGINT          FK → users(id)
+PRIMARY KEY (group_id, user_id)
+
+TABLE: follows
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+follower_id          BIGINT          FK → users(id)
+following_id         BIGINT          FK → users(id)
+
+TABLE: reported_post
+------------------------------------------------
+id                   BIGINT          PRIMARY KEY
+reason               VARCHAR(255)
+reported_at          DATETIME(6)
+reported_post_id     BIGINT          FK → post(id)
+reporter_id          BIGINT          FK → users(id)
+
+TABLE: post_likes (optional if normalized via likes table)
+------------------------------------------------
+post_id              BIGINT          FK → post(id)
+user_id              BIGINT          FK → users(id)
+PRIMARY KEY (post_id, user_id)
