@@ -7,12 +7,31 @@ import com.socio.socio.dto.SharePostRequestDto;
 import com.socio.socio.entity.Post;
 import com.socio.socio.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+
+/**
+ * PostController manages the post-related operations for the soCiO social network application.
+ * It provides endpoints for creating, retrieving, deleting posts, sharing posts, reporting posts, and creating group posts.
+ * The controller interacts with the PostService to handle the business logic for these operations.
+ *
+ * Endpoints:
+ * - POST /api/posts: Creates a new post.
+ * - GET /api/posts: Retrieves a paginated list of all posts.
+ * - GET /api/posts/user: Retrieves posts by a specific user.
+ * - DELETE /api/posts/{postId}: Deletes a specified post.
+ * - POST /api/posts/share/{originalPostId}: Shares a specified post.
+ * - POST /api/posts/posts/{postId}/report: Reports a specified post.
+ * - POST /api/posts/group: Creates a post in a group.
+ */
 
 @RestController
 @RequestMapping("/api/posts")
@@ -29,8 +48,15 @@ public class PostController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<Post> getAllPosts() {
-        return postService.getAllPosts();
+    public ResponseEntity<Page<Post>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
     @GetMapping("/user")

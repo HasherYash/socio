@@ -6,6 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
+/**
+ * Service for managing likes on posts.
+ * Allows users to like and unlike posts.
+ *
+ * Methods:
+ * - toggleLike: Toggles a like on a post. If the user has already liked the post, it is unliked; otherwise, it is liked.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {

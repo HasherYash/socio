@@ -10,6 +10,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for managing comments within the application.
+ * Provides functionality for adding, retrieving, and deleting comments on posts.
+ * to perform operations related to comments.
+ *
+ * Key functionalities include:
+ * - Adding a comment to a post.
+ * - Retrieving all comments associated with a post, sorted by creation date.
+ * - Deleting a comment, with authorization checks to ensure only the comment's author can delete it.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {

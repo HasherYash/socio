@@ -8,11 +8,30 @@ import com.socio.socio.repository.ReportedPostRepository;
 import com.socio.socio.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+/**
+ * Service for managing posts in the application.
+ * Provides functionality for creating, deleting, sharing, and reporting posts.
+ * Includes post analytics and moderation capabilities.
+ *
+ * Methods:
+ * - createPost: Creates a new post.
+ * - getAllPosts: Retrieves a paginated list of all posts.
+ * - getPostsByUser: Retrieves posts by a specific user.
+ * - deletePost: Deletes a post by its ID.
+ * - sharePost: Allows a user to share an existing post.
+ * - reportPost: Reports a post for moderation.
+ * - createPostInGroup: Allows a user to create a post in a group.
+ * - getPostAnalytics: Retrieves analytics on posts based on likes and comments.
+ * - moderateReportedPost: Moderates a reported post by approving or rejecting it.
+ */
 
 @Service
 public class PostService {
@@ -42,8 +61,8 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     public List<Post> getPostsByUser(String email) {

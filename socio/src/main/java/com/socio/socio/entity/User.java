@@ -9,6 +9,26 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+/**
+ * User is an entity class representing a user within the application.
+ * It is mapped to the "users" table in the database.
+ *
+ * Fields:
+ * - id: The unique identifier for the user.
+ * - email: The user's email (unique).
+ * - password: The user's password.
+ * - role: The user's role (USER or ADMIN).
+ * - isPrivateProfile: A flag indicating whether the user's profile is private.
+ * - dateOfBirth: The user's date of birth.
+ * - passwordChangedAt: The timestamp when the user's password was last changed.
+ * - groups: A set of groups the user is part of (many-to-many relationship with Group).
+ * - username: The user's username (unique).
+ * - createdAt: The timestamp when the user was created.
+ *
+ * Methods:
+ * - onCreate(): Sets the createdAt field before the user is persisted to the database.
+ */
+
 @Entity
 @Getter
 @Setter

@@ -16,6 +16,19 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Service class responsible for handling authentication-related operations, such as:
+ * - User registration
+ * - User login
+ * - Password reset
+ * - Token generation for user authentication.
+*
+ * Key functionalities include:
+ * - Registering a new user with checks for duplicate email and specific role-based conditions.
+ * - Logging in a user and generating a JWT token if the user's credentials are correct.
+ * - Resetting a user's password and enforcing password change restrictions (e.g., password expiry after 30 days).
+ */
+
 @Service
 public class AuthService {
 

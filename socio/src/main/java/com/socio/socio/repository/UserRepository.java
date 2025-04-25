@@ -4,6 +4,8 @@ import com.socio.socio.dto.UserFollowerStatsDto;
 import com.socio.socio.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.email LIKE %:email%")
     List<User> findByEmailContaining(String email);
 
+    Page<User> findAll(Pageable pageable);
 
 }

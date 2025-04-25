@@ -9,6 +9,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * FollowController manages the user follow/unfollow operations for the soCiO social network application.
+ * It provides endpoints to follow, unfollow, and retrieve followers or following users.
+ * The controller interacts with the FollowService to handle the business logic for following actions.
+ *
+ * Endpoints:
+ * - POST /api/follow/{username}: Follows a user by their username.
+ * - DELETE /api/follow/{username}: Unfollows a user by their username.
+ * - GET /api/follow/followers/{username}: Retrieves the list of followers for the specified user.
+ * - GET /api/follow/following/{username}: Retrieves the list of users the specified user is following.
+ */
+
 @RestController
 @RequestMapping("/api/follow")
 @RequiredArgsConstructor

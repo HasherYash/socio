@@ -7,9 +7,29 @@ import com.socio.socio.repository.GroupRepository;
 import com.socio.socio.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
+
+/**
+ * Service for managing groups, including group creation, joining, leaving, and searching.
+ * Provides functionality for managing group memberships and posts related to groups.
+ *
+ * Methods:
+ * - createGroup: Creates a new group.
+ * - joinGroup: Allows a user to join a specific group.
+ * - leaveGroup: Allows a user to leave a group.
+ * - getGroupDetails: Retrieves details of a group.
+ * - getGroupMembers: Retrieves members of a group.
+ * - addUserToGroup: Adds a user to a group.
+ * - removeUserFromGroup: Removes a user from a group.
+ * - searchGroups: Searches for groups based on a search term.
+ * - getGroupsForUser: Retrieves the groups a user is a member of.
+ * - getGroupsSorted: Retrieves groups sorted by members and post count.
+ * - getAllGroups: Retrieves a paginated list of all groups.
+ */
 
 @Service
 public class GroupService {
@@ -93,4 +113,7 @@ public class GroupService {
         return groupRepository.getGroupsSortedByMembersAndPosts();
     }
 
+    public Page<Group> getAllGroups(Pageable pageable) {
+        return groupRepository.findAll(pageable);
+    }
 }

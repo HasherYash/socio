@@ -3,10 +3,26 @@ package com.socio.socio.controller;
 import com.socio.socio.entity.User;
 import com.socio.socio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+/**
+ * UserController manages the user-related operations for the soCiO social network application.
+ * It provides endpoints for creating, updating, retrieving, and deleting user profiles.
+ * The controller interacts with the UserService to handle the business logic for these operations.
+ *
+ * Endpoints:
+ * - POST /api/users: Creates a new user (only accessible by admins).
+ * - GET /api/users/{id}: Retrieves a user profile by ID (accessible by the user themselves or admins).
+ * - GET /api/users: Retrieves a paginated list of all users (only accessible by admins).
+ * - PUT /api/users/{id}: Updates a user profile (accessible by the user themselves or admins).
+ * - DELETE /api/users/{id}: Deletes a user (only accessible by admins).
+ */
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,35 +31,37 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //  Only authenticated users can create a user
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
-    //  Any authenticated user can view their own profile (or admin can view any)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    // Only admins can get list of all users
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<Page<User>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
-    // Users can update their own profile or admins can update any
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
-    // Only admins can delete users
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(@PathVariable Long id) {

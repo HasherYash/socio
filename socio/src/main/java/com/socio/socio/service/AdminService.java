@@ -14,6 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class for administering the system, specifically for managing admin accounts,
+ * retrieving user statistics, and managing reported posts.
+ *
+ * This service provides methods to:
+ * - Create or update admin users.
+ * - Retrieve user statistics grouped by registration date and sorted by follower count.
+ * - Retrieve grouped statistics of reported posts, including the reporter, creation date, file type, and count of reports.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class AdminService {

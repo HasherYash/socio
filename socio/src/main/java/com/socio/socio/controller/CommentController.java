@@ -10,6 +10,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * CommentController manages the comment-related operations for the soCiO social network application.
+ * It provides endpoints to add, retrieve, and delete comments for posts.
+ * The controller interacts with the CommentService to handle business logic for these operations.
+ *
+ * Endpoints:
+ * - POST /api/comments/{postId}: Adds a new comment to the specified post.
+ * - GET /api/comments/{postId}: Retrieves all comments for the specified post.
+ * - DELETE /api/comments/{commentId}: Deletes the specified comment.
+ */
+
 @RestController
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor

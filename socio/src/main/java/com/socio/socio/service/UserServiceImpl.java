@@ -19,6 +19,22 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * Service for managing user data and operations.
+ * Provides functionality for creating, updating, deleting, and retrieving users.
+ * Includes bulk upload functionality for importing users from CSV or Excel files.
+ *
+ * Methods:
+ * - createUser: Creates a new user.
+ * - getUserById: Retrieves a user by their ID.
+ * - getAllUsers: Retrieves a paginated list of all users.
+ * - updateUser: Updates user information.
+ * - deleteUser: Deletes a user by their ID.
+ * - uploadUsers: Uploads a list of users from a CSV or Excel file.
+ */
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,8 +50,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    @Override
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     public User updateUser(Long id, User updatedUser) {

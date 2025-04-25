@@ -11,6 +11,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation for managing user follow/unfollow actions.
+ * Provides functionality for following and unfollowing users, retrieving followers, and getting users that a user is following.
+ *
+ * Methods:
+ * - followUser: Follows a target user.
+ * - unfollowUser: Unfollows a target user.
+ * - getFollowers: Retrieves a list of users following a specific user.
+ * - getFollowing: Retrieves a list of users a specific user is following.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {

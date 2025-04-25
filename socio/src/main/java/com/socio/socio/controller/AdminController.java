@@ -17,6 +17,25 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * AdminController provides administrative endpoints for managing users, posts, reports,
+ * analytics, and group-related operations.
+ *
+ * All endpoints in this controller are secured and require the user to have an ADMIN role.
+ *
+ * Features include:
+ * - Creating/updating admin users
+ * - Viewing user follower statistics
+ * - Accessing post analytics data
+ * - Viewing reported posts grouped by criteria
+ * - Sorting groups by member and post counts
+ * - Moderating reported posts (approve/reject)
+ * - Uploading users in bulk via CSV/XLSX
+ *
+ * This controller delegates the core logic to service layer components such as AdminService,
+ * PostService, GroupService, and UserService.
+ */
+
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -61,7 +80,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> moderatePost(
             @PathVariable Long postId,
-            @RequestParam String action // APPROVED or REJECTED
+            @RequestParam String action
     ) {
         return ResponseEntity.ok(postService.moderateReportedPost(postId, action));
     }
@@ -70,7 +89,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> uploadUsers(@RequestParam("file") MultipartFile file) {
         try {
-            userService.uploadUsers(file); // Calls the method from UserService
+            userService.uploadUsers(file);
             return ResponseEntity.ok("Users uploaded successfully.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error uploading users: " + e.getMessage());
